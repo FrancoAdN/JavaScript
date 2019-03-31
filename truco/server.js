@@ -1,5 +1,7 @@
 let turns = 0;
 
+let compare = false;
+
 let sort_cards = [
     {num: 1, type:'Espada'},{num: 1, type:'Basto'},
     {num: 7, type:'Espada'},{num: 7, type:'Oro'},
@@ -10,8 +12,8 @@ let sort_cards = [
     {num: 5, type:'Todos'},{num: 4, type:'Todos'},
 ];
 
-let card_player1;
-let card_player2;
+let card_player1 = {num:0, type:''};
+let card_player2 = {num:0, type:''};
 
 let greater_card = (cardp1, cardp2) => {
   let p1, p2;
@@ -197,16 +199,9 @@ io.sockets.on('connection',(socket) => {
         playerOne.emit('turn', true, turns);
       });
 
-
       
-      
-
-      
-
-
     
     }
     
    
 });
-

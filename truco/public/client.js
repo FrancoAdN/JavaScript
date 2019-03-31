@@ -10,7 +10,7 @@ socket.on('cards', (data) => {
     }
     cards = data; 
 });
-socket.on('turn',(data, t) => {turn = data; c_turns = t });
+socket.on('turn',(data, t) => {turn = data; c_turns = t; console.log(c_turns)});
 
 socket.on('adv_card', (data) => { adv_cards.push(data) });
 
