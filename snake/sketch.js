@@ -1,59 +1,57 @@
-let width = 600;
-let height = 600;
-let s = new Snake(10,10)
+let snake;
+let rez = 20;
+let food;
+let w;
+let h;
 
-let scl = 20;
-
-let speed = {
-  x:0,y:0
-};
-
-let food = {
-  x: Math.floor(Math.random()*width),
-  y: Math.floor(Math.random()*height)
+function setup() {
+  createCanvas(400, 400);
+  w = floor(width / rez);
+  h = floor(height / rez);
+  frameRate(7);
+  snake = new Snake();
+  foodLocation();
 }
 
-
-function setup(){
-  createCanvas(600, 600);
-}
-
-function draw(){
-  background(51);
-
-
-  update();
-  if(dist(s.x, s.y, food.x, food.y) < 10){
-    s.score++;
-    eat();
-    console.log(s.score);
-    food.x = Math.floor(Math.random()*width);
-    food.y = Math.floor(Math.random()*height);
-  }
-
-
-  fill(255);
-  rect(s.x, s.y, scl, scl);
-  fill('red');
-  rect(food.x, food.y, scl, scl);
-
+function foodLocation() {
+  let x = floor(random(w));
+  let y = floor(random(h));
+  food = createVector(x, y);
   
 }
 
-
-
 function keyPressed() {
-  if (keyCode === UP_ARROW) {
-    speed.x = 0;
-    speed.y = -1;
-  } else if (keyCode === DOWN_ARROW) {
-    speed.x = 0;
-    speed.y = 1;
+  if(keyCode === LEFT_ARROW) {
+    snake.setDir(-1, 0);
   } else if (keyCode === RIGHT_ARROW) {
-    speed.x = 1;
-    speed.y = 0;
-  } else if (keyCode === LEFT_ARROW) {
-    speed.x = -1;
-    speed.y = 0;
+  	snake.setDir(1, 0);
+  } else if (keyCode === DOWN_ARROW) {
+  	snake.setDir(0, 1);
+  } else if (keyCode === UP_ARROW) {
+  	snake.setDir(0, -1);
+  } else if (key == ' ') {
+  	snake.grow();
   }
+
+}
+
+function draw() {
+  scale(rez);
+  background(220);
+  if (snake.eat(food)) {
+     foodLocation();
+  }
+  snake.update();
+  snake.show();
+  
+  
+  if (snake.endGame()) {
+  	print("END GAME");
+    background(255, 0, 0);
+    noLoop();
+  }
+  
+  noStroke();
+  fill(255, 0, 0);
+  rect(food.x, food.y, 1, 1);
 }

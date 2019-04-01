@@ -1,33 +1,63 @@
-
-
-//THERE'S A SHIFT FUNCTION!!!!!!!
-//THERE'S A SCALE FUNCTION IN P5JS !!!
-
-let i = 0;
-class Snake{
-    constructor(x, y){
-        this.x = x;
-        this.y = y;
-        this.tail = []
-        this.score = 0;
+class Snake {
+  
+    constructor() {
+        this.body = [];
+        this.body[0] = createVector(floor(w/2), floor(h/2));
+        this.xdir = 0;
+        this.ydir = 0;
+        this.len = 0;
     }
-}
-
-function update(){
-    for (let i = 0; i < s.tail.length - 1; i++) {
-        s.tail[i] = s.tail[i + 1];
+    
+    setDir(x, y) {
+        this.xdir = x;
+        this.ydir = y;
     }
-    if(s.tail.length >= 1){
-        fill(255);
-        for(let i = 0; i < s.tail.length; i++)
-            rect(s.tail[i].x, s.tail[i].y, scl, scl);
+    
+    update() {
+        let head = this.body[this.body.length-1].copy();
+        this.body.shift();
+        head.x += this.xdir;
+        head.y += this.ydir;
+        this.body.push(head);
     }
-    s.x += speed.x;
-    s.y += speed.y;
-   
-}
-
-function eat(){
-    s.tail.push({x: s.x , y: s.y});
-    s.x += scl;
-}
+    
+    grow() {
+        let head = this.body[this.body.length-1].copy();
+        this.len++;
+        this.body.push(head);
+    }
+    
+    endGame() {
+        let x = this.body[this.body.length-1].x;
+        let y = this.body[this.body.length-1].y;
+        if(x > w-1 || x < 0 || y > h-1 || y < 0) {
+            return true;
+        }
+        for(let i = 0; i < this.body.length-1; i++) {
+            let part = this.body[i];
+            if(part.x == x && part.y == y) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    eat(pos) {
+        let x = this.body[this.body.length-1].x;
+        let y = this.body[this.body.length-1].y;
+        if(x == pos.x && y == pos.y) {
+            this.grow();
+            return true;
+        }
+        return false;
+    }
+    
+    show() {
+        for(let i = 0; i < this.body.length; i++) {
+            fill(0);
+            noStroke();
+            rect(this.body[i].x, this.body[i].y, 1, 1)
+        }
+    }
+  
+  }
