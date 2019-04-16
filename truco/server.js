@@ -1,21 +1,80 @@
-let turns = 0;
+//CLASS THAT MAKES THE CARD
 
-let compare = false;
+class Card{
+  constructor(){
+      this.type;
+      this.num;
+      this.pos = {x: 0, y: 0};
+      this.getCard();
+  }
+  
 
-let sort_cards = [
-    {num: 1, type:'Espada'},{num: 1, type:'Basto'},
-    {num: 7, type:'Espada'},{num: 7, type:'Oro'},
-    {num: 3, type:'Todos'},{num: 2, type:'Todos'},
-    {num: 1, type: 'Todos'},{num: 12, type:'Todos'},
-    {num: 11, type:'Todos'},{num: 10, type:'Todos'},
-    {num: 7, type:'Todos'},{num: 6, type:'Todos'},
-    {num: 5, type:'Todos'},{num: 4, type:'Todos'},
+  getNum(){
+      let n;
+      do {
+          n = Math.floor(Math.random() * 11) + 1;
+      } while (n == 8 || n == 9);
+      return n;
+  }
+  
+  getType(){
+      let t;
+      switch(Math.floor(Math.random() * 3)){
+          case 0:
+              t = 'Espada';
+              break;
+          case 1:
+              t = 'Basto';
+              break;
+          case 2:
+              t = 'Copa';
+              break;
+          case 3:
+              t = 'Oro';
+              break;
+      }
+      return t;
+  }
+
+  getCard(){
+      this.num = this.getNum();
+      this.type = this.getType();
+  }
+
+}
+
+//SORTED CARD 
+
+const sort_cards = [
+  {num: 1, type:'Espada'},{num: 1, type:'Basto'},
+  {num: 7, type:'Espada'},{num: 7, type:'Oro'},
+  {num: 3, type:'Todos'},{num: 2, type:'Todos'},
+  {num: 1, type: 'Todos'},{num: 12, type:'Todos'},
+  {num: 11, type:'Todos'},{num: 10, type:'Todos'},
+  {num: 7, type:'Todos'},{num: 6, type:'Todos'},
+  {num: 5, type:'Todos'},{num: 4, type:'Todos'},
 ];
 
-let card_player1 = {num:0, type:''};
-let card_player2 = {num:0, type:''};
 
-let greater_card = (cardp1, cardp2) => {
+//FUNCTIONS OF CARDS (NO IN SERVER)
+function is_there_num(arr, c){
+  for(let i = 0; i < arr.length; i++){
+      if(arr[i].num == c)
+          return true;
+  }
+  return false;
+}
+
+function is_there_type(arr, t){
+  for(let i = 0; i < arr.length; i++){
+      if(arr[i].type == t)
+          return true;
+  }
+  return false;
+}
+
+
+function greater_card(cardp1, cardp2){
   let p1, p2;
   for(i = 0; i < sort_cards.length; i++){
     if(cardp1.num == sort_cards[i].num){
@@ -41,167 +100,218 @@ let greater_card = (cardp1, cardp2) => {
   else if(p1 > p2)
     return 'PLAYER TWO';
   else
-    return 'PLAYER ONE';
+    return 'TIE';
 }
 
-let aux = {num:0,type:''};
+function get_card_one(arr){
+  arr.push(new Card());
 
-let is_there_num = (n, arr) => { 
-  for( let i = 0; i < arr.length; i++){
-    if(n == arr[i].num)
-      return true
-    else if( i == arr.length -1)
-      return false
-  }
-}; 
-let is_there_type = (s, arr) => {
-  for(let i = 0; i < arr.length; i++){
-    if(s == arr[i].type)
-      return true
-    else if(i == arr.length -1)
-      return false
-  }
-};
-
-
-let get_cards = (arr) => {
-  for( i = 1; i < arr.length; i++){
-    do{
-      aux.num = Math.floor(Math.random() * 11) + 1;
-      while(aux.num == 8 || aux.num == 9)
-        aux.num = Math.floor(Math.random() * 11) + 1;
-
-      aux.type = Math.floor(Math.random() * 3) + 1;
-      if(aux.type == 1)
-        aux.type = 'Basto';
-      else if(aux.type == 2)
-        aux.type = 'Espada';
-      else if(aux.type == 3)
-        aux.type = 'Oro';
-      else if(aux.type == 4)
-        aux.type = 'Copa'
-    }
-    while( (is_there_num( aux.num, arr) == true) && (is_there_type(aux.type, arr) == true));
-    arr[i].num = aux.num;
-    arr[i].type = aux.type;
-  }
-  
-}
-
-let cards_one = [{num:0,type:''},{num:0,type:''},{num:0,type:''}];
-
-let i = 0;
-
-cards_one[0].num = Math.floor(Math.random() * 11) + 1;
-while(cards_one[0].num == 8 || cards_one[0].num == 9)
-    cards_one[0].num = Math.floor(Math.random() * 11) + 1;
-
-cards_one[0].type = Math.floor(Math.random() * 3) + 1;
-if(cards_one[i].type == 1)
-  cards_one[i].type = 'Basto';
-else if(cards_one[i].type == 2)
-  cards_one[i].type = 'Espada';
-else if(cards_one[i].type == 3)
-  cards_one[i].type= 'Oro';
-else if(cards_one[i].type == 4)
-  cards_one[i].type = 'Copa';
-  
-get_cards(cards_one)
-
-let cards_two = [{num:0,type:''},{num:0,type:''},{num:0,type:''}];
-
-cards_two[0].num = Math.floor(Math.random() * 11) + 1;
-while(cards_two[0].num == 8 || cards_two[0].num == 9)
-    cards_two[0].num = Math.floor(Math.random() * 11) + 1;
-
-cards_two[0].type = Math.floor(Math.random() * 3) + 1;
-if(cards_two[0].type == 1)
-  cards_two[0].type = 'Basto';
-else if(cards_two[0].type == 2)
-  cards_two[0].type = 'Espada';
-else if(cards_two[0].type == 3)
-  cards_two[0].type= 'Oro';
-else if(cards_two[0].type == 4)
-  cards_two[0].type = 'Copa';
-  
-get_cards(cards_two)
-for( i = 0; i < cards_two.length; i++){
-  while( is_there_num(cards_two[i].num,cards_one) == true && is_there_type(cards_two[i].type, cards_one) == true ){
-    do{
-      aux.num = Math.floor(Math.random() * 11) + 1;
-      while(aux.num == 8 || aux.num == 9)
-        aux.num = Math.floor(Math.random() * 11) + 1;
-
-      aux.type = Math.floor(Math.random() * 3) + 1;
-      if(aux.type == 1)
-        aux.type = 'Basto';
-      else if(aux.type == 2)
-        aux.type = 'Espada';
-      else if(aux.type == 3)
-        aux.type = 'Oro';
-      else if(aux.type == 4)
-        aux.type = 'Copa'
-    }while( (is_there_num( aux.num, cards_one) == true) && (is_there_type(aux.type, cards_one) == true));
-    cards_two[i].num = aux.num;
-    cards_two[i].type = aux.type;
+  for(let i = 1; i < 3; i++){
+      let aux = new Card();
+      while(is_there_num(arr, aux.num) && is_there_type(arr, aux.type))
+          aux.getCard();
+      
+      arr.push(aux);
   }
 }
 
+function get_card_two(arr, arr1){
+  for(let i = 0; i < 3; i++){
+      let aux = new Card();
+      while((is_there_num(arr1, aux.num) && is_there_type(arr1, aux.type)) || (is_there_num(arr, aux.num) && is_there_type(arr, aux.type)))
+          aux.getCard();
+  
+      arr.push(aux);
+  }
+}
+
+function remove_card(arr){
+  for(let i = 0; i < arr.length + 2; i++)
+      arr.pop();    
+}   
+
+//MAKING CARDS PLAYER ONE
+let cards_player_one = [];
+
+get_card_one(cards_player_one);
+
+//MAKING CARDS PLAYER TWO
+let cards_player_two = [];
+get_card_two(cards_player_two, cards_player_one);
 
 
 
+
+
+
+
+//    MAKING THE SERVER
+
+
+
+//FUNCTIONS ON THE SERVER
+
+
+//THE SERVER ITSELF
 
 const express = require('express');
 
 let app = express();
 const server = app.listen(3000);
 
-app.use(express.static('public'))
+app.use(express.static('public'));
 
-const socket = require('socket.io')
+const socket = require('socket.io');
 
-let playerOne, playerTwo;
 let cont = 0;
+let playerOne, playerTwo;
 
 let io = socket(server);
+console.log('Server running \n');
 
 io.sockets.on('connection',(socket) => {
-    console.log('New connection ' + socket.id); 
-    
-    if(cont == 0){
-        playerOne = socket;
-        playerOne.emit('welcome','Bienvenido al truco, eres el jugador uno');
-        cont++;
-    }else if(cont == 1){
-        playerTwo = socket;
-        playerTwo.emit('welcome','Bienvenido al truco, eres el jugador dos');
-        cont++;
-    }else{
-        socket.emit('welcome', 'We are out of players');
-    }
 
-    if(cont == 2){
-      playerOne.emit('cards', cards_one);
-      playerTwo.emit('cards', cards_two);
+  console.log('New connection ' + socket.id); 
+  
+  if(cont == 0){
+      playerOne = socket;
+      playerOne.emit('welcome','Bienvenido al truco, eres el jugador uno');
+      cont++;
+  }else if(cont == 1){
+      playerTwo = socket;
+      playerTwo.emit('welcome','Bienvenido al truco, eres el jugador dos');
+      cont++;
+  }else{
+      socket.emit('welcome', 'We are out of players');
+  }
 
-      playerOne.emit('turn', true, turns);
+  if(cont == 2){
+    let compare = false;
+    let turns = 0;
+    let card_played_one, card_played_two;
 
-      playerOne.on('card_played', (data) => { 
-        playerTwo.emit('adv_card', data);
-        card_player1 = data; 
-        playerTwo.emit('turn', true, turns);
-      });
-      
-      playerTwo.on('card_played', (data) => {
+    //PASSING CARDS TO THE PLAYERS
+    playerOne.emit('cards', cards_player_one);
+    playerTwo.emit('cards', cards_player_two);
+
+    //PLAYER ONE PLAYS
+    playerTwo.emit('turn', true, turns);
+
+    //RECIVING THE CARDS PLAYED, SENDING TO THE PLAYER TWO AND DECIDING WHO PLAYS NEXT
+
+    playerOne.on('card_played', (data) => { 
+      card_played_one = data; 
+      playerTwo.emit('adv_card', card_played_one);
+
+      if(compare){
+        compare = false;
         turns++;
-        playerOne.emit('adv_card', data);
-        card_player2 = data;
-        playerOne.emit('turn', true, turns);
-      });
+        let decide = greater_card(card_played_one, card_played_two);
+        console.log(decide);
+        if(decide == 'PLAYER ONE')
+          playerOne.emit('turn', true, turns);
+        else if(decide == 'PLAYER TWO')
+          playerTwo.emit('turn', true, turns);
+        else if(decide == 'TIE')
+          playerOne.emit('turn', true, turns);
 
+      }else{
+        playerTwo.emit('turn', true, turns);
+        compare = true;
+      }
+    });
+    
+    
+    playerTwo.on('card_played', (data) => { 
+      card_played_two = data; 
+      playerOne.emit('adv_card', card_played_two);
+
+      if(compare){
+        compare = false;
+        turns++;
+        let decide = greater_card(card_played_one, card_played_two);
+        console.log(decide);
+        if(decide == 'PLAYER ONE')
+          playerOne.emit('turn', true, turns);
+        else if(decide == 'PLAYER TWO')
+          playerTwo.emit('turn', true, turns);
+        else if(decide == 'TIE')
+          playerOne.emit('turn', true, turns);
+
+      }else{
+        playerOne.emit('turn', true, turns);
+        compare = true;
+      }
+    });
+
+
+
+
+
+
+
+    // playerOne.on('card_played', (data) => {
+
+    //   turns++;
+
+    //   card_played_one = data;
+
+    //   playerTwo.emit('adv_card', card_played_one);
       
-    
-    }
-    
-   
+    //   //COMPARING WHO WINS THE HAND
+    //   if(compare){
+
+    //     compare = false;
+    //     console.log(greater_card(card_played_one, card_played_two));
+    //     if(greater_card(card_played_one, card_played_two) == 'PLAYER ONE')
+    //       playerOne.emit('turn', true, turns);
+    //     else if(greater_card() == 'PLAYER TWO')
+    //       playerTwo.emit('turn', true, turns);
+    //     else
+    //       playerOne.emit('turn', true, turns);
+
+
+    //   }else{
+    //     compare = true;
+    //     playerTwo.emit('turn', true, turns);
+    //   }
+
+    // });
+
+
+
+    // playerTwo.on('card_played', (data) => {
+
+    //   turns++;
+      
+    //   card_played_two = data;
+
+    //   playerOne.emit('adv_card', card_played_two);
+      
+    //   //COMPARING WHO WINS THE HAND
+    //   if(compare){
+    //     console.log(greater_card(card_played_one, card_played_two));
+    //     compare = false;
+    //     if(greater_card(card_played_one, card_played_two) == 'PLAYER ONE')
+    //       playerOne.emit('turn', true, turns);
+    //     else if(greater_card() == 'PLAYER TWO')
+    //       playerTwo.emit('turn', true, turns);
+    //     else
+    //       playerOne.emit('turn', true, turns);
+
+
+    //   }else{
+    //     compare = true;
+    //     playerOne.emit('turn', true, turns);
+    //   }
+
+    // });
+
+  }
+
+ 
 });
+
+
+
+

@@ -1,73 +1,74 @@
-class Element {
-    constructor(){
-        this.type = this.getTypeElement();
-        this.len = this.getLengthElement();
-        this.body = this.getPositionElement();
+class Rect{
+    constructor(x, y, b, h, c){
+        this.body = createVector(x, y);
+        this.b = b;
+        this.h = h;
+        this.color = c;
+    } 
+    show(){
+        noStroke();
+        fill(this.color);
+        rect(this.body.x, this.body.y, this.b, this.h);
     }
+}
 
-    getTypeElement(){
-        let t;
-        switch (floor(random(3))) {
-            case 0:
-                t = 'square';
-                break;
-            case 1:
-                t = 'rect';
-                break;
-            case 2:
-                t = 'circle';
-                break;
-        
-        }
-        return t;
+class Circle{
+    constructor(x, y, r, c, s){
+        this.body = createVector(x, y);
+        this.r = r;
+        this.color = c;
+        this.shadow = s;
     }
-
-
-    getLengthElement(){
-        let len;
-        switch (floor(random(5))) {
-            case 1:
-                len = 100;
-                break;
-            case 2:
-                len = 200
-                break;
-            case 3:
-                len = 50;
-                break;
-            case 4:
-                len = 75;
-                break;
-            case 5:
-                len = 120;
-                break;
-            case 0:
-                len = 300;
-                break;
-        
-        }
-        return len;
-    }
-
-
-    getPositionElement(){
-        return createVector(floor(random(width - this.len)), floor(random(height - this.len)));
-    }
-
 
     show(){
-        stroke(255)
-        fill(0);
-        switch(this.type){
-            case 'square':
-                rect(this.body.x, this.body.y, this.len, this.len);
-                break;
-            case 'circle':
-                circle(this.body.x, this.body.y, this.len/2);
-                break;
-            case 'rect':
-                rect(this.body.x, this.body.y, this.len, this.len - 30);
-                break;
+        noStroke();
+        fill(this.color);
+        if(this.shadow){
+            drawingContext.shadowBlur = 30;
+            drawingContext.shadowColor = 'white';
+            circle(this.body.x, this.body.y, this.r);
+            drawingContext.shadowBlur = 0;
+        }else
+            circle(this.body.x, this.body.y, this.r);
+        
+    }
+}
+
+class Triangle{
+    constructor(r, a1, a2, a3, c, x, y, rotate, mode){
+        this.color = c;
+        this.r = r;
+        this.a1 = a1;
+        this.a2 = a2;
+        this.a3 = a3;
+        this.x = x;
+        this.y = y;
+        this.rotate = rotate;
+        this.mode = mode
+    }
+
+    show(){
+        angleMode(this.mode);
+        noStroke();
+        translate(this.x, this.y);
+        // drawingContext.shadowBlur = 40;
+        // drawingContext.shadowColor = 'white';
+        fill(this.color);
+        beginShape();
+        vertex(this.r * cos(this.a1), this.r * sin(this.a1));
+        vertex(this.r * cos(this.a2), this.r * sin(this.a2));
+        vertex(this.r * cos(this.a3), this.r * sin(this.a3));
+        endShape(CLOSE);
+
+
+        if(this.rotate){
+            this.a1 += 0.01;
+            this.a2 += 0.01;
+            this.a3 += 0.01;
         }
+        // drawingContext.shadowBlur = 0;
+
+
+        translate(0, 0);
     }
 }
