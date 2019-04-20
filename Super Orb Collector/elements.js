@@ -12,8 +12,6 @@ class Rect{
     }
 }
 
-
-
 class Circle{
     constructor(x, y, r, c, s){
         this.body = createVector(x, y);
