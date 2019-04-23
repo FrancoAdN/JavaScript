@@ -1,4 +1,4 @@
-let game = true;
+//let game = true;
 let grid;
 let cols,rows;
 let scl = 40;
@@ -75,52 +75,57 @@ function index(i, j) {
     return 1
 }
 
-cols = Math.floor(width / scl);
-rows = Math.floor(height / scl);
+function makeMaze(game){
+    cols = Math.floor(width / scl);
+    rows = Math.floor(height / scl);
 
-grid = make2DArray(cols, rows);
-for(let i = 0; i < cols; i++){
-    for(let j = 0; j < rows; j++){
-        grid[i][j] = new Cell(i, j);
-    }
-}
-    
-current = grid[0][0];
-
-while (game){
-
+    grid = make2DArray(cols, rows);
     for(let i = 0; i < cols; i++){
         for(let j = 0; j < rows; j++){
-            if(grid[i][j].visited)
-                cont++;
-            else
-                cont = 0;
-        }
-    }
-    
-    if(cont > rows*cols){
-        game = false;
-        console.log('MAZE DONE');
-    }else{
-        current.visited = true;
-
-        let next = current.checkNeighbors();
-        if(next){
-            next.visited = true;    
-
-            stack.push(current);
-                //STEP 3
-            removeWalls(current, next);
-    
-                //STEP 4
-            current = next;
-        }else if(stack.length > 0){
-            current = stack.pop();
+            grid[i][j] = new Cell(i, j);
         }
     }
         
+    current = grid[0][0];
+
+    while (game){
+
+        for(let i = 0; i < cols; i++){
+            for(let j = 0; j < rows; j++){
+                if(grid[i][j].visited)
+                    cont++;
+                else
+                    cont = 0;
+            }
+        }
         
+        if(cont > rows*cols){
+            game = false;
+            console.log('MAZE DONE');
+        }else{
+            current.visited = true;
+
+            let next = current.checkNeighbors();
+            if(next){
+                next.visited = true;    
+
+                stack.push(current);
+                    //STEP 3
+                removeWalls(current, next);
+        
+                    //STEP 4
+                current = next;
+            }else if(stack.length > 0){
+                current = stack.pop();
+            }
+        }
+            
+            
+    }
+    return grid;
 }
+
+
     
     
 
@@ -153,6 +158,7 @@ function removeWalls(a, b){
 
 
 //SERVER CONFIG
+let maze = makeMaze(true);
 
 const express = require('express');
 
@@ -164,6 +170,7 @@ app.use(express.static('public'));
 const socket = require('socket.io');
 
 let cont_players = 0;
+let disc = false;
 let end = {
     x: Math.floor(Math.random()* (cols-1)) * scl,
     y: Math.floor(Math.random()* (rows-1)) * scl
@@ -205,6 +212,7 @@ console.log('Server running \n');
 
 io.sockets.on('connection', (socket) => {
     console.log('New connection ' + socket.id);
+
     if(cont_players === 0){
         player_one.socket = socket;
         player_one.socket.emit('welcome', 'Welcome to MAZE!, you are player one!');
@@ -218,8 +226,23 @@ io.sockets.on('connection', (socket) => {
     
     
     if(cont_players === 2){
-        player_one.socket.emit('maze', grid, player_one.pos, end);
-        player_two.socket.emit('maze', grid, player_two.pos, end);
+
+        player_one.socket.on('disconnect', () => {
+            console.log('PLAYER ONE DISCONNECTED');
+            player_two.socket.emit('over', false);
+            cont_players--;
+
+        });
+
+        player_two.socket.on('disconnect', () => {
+            console.log('PLAYER TWO DISCONNECTED');
+            player_one.socket.emit('over', false);
+            cont_players--;
+            
+        });
+
+        player_one.socket.emit('maze', maze, player_one.pos, end);
+        player_two.socket.emit('maze', maze, player_two.pos, end);
 
         player_one.socket.on('pos', (data) => {
             player_two.socket.emit('adv_pos', data);
@@ -231,9 +254,15 @@ io.sockets.on('connection', (socket) => {
 
         player_one.socket.on('win', () => {
             player_two.socket.emit('over', false);
+            maze = makeMaze(true);
+            player_one.socket.emit('maze', maze, player_one.pos, end);
+            player_two.socket.emit('maze', maze, player_two.pos, end);
         });
         player_two.socket.on('win', () => {
             player_one.socket.emit('over', false);
+            maze = makeMaze(true);
+            player_one.socket.emit('maze', maze, player_one.pos, end);
+            player_two.socket.emit('maze', maze, player_two.pos, end);
         });
     }
     
