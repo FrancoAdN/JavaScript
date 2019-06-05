@@ -1,28 +1,25 @@
-
-class Sw {
+class Ball{
     constructor(){
-        this.body = createVector(width/2, height - (height/4));
-        this.color = this.switchColor();
-        this.r = 15;
-        this.gravity = 2.5;
-        this.jValue = 75;
+        this.body = createVector(width / 2, 550);
+        this.grav = 0.6;
+        this.lift = -15;
+        this.v = 0;
+        this.r = 10;
+        this.color = this.getColor();
     }
 
-    switchColor(){
-        color = floor(random(4));
-        if(color == 0)
-            color = 'red'
-        else if(color == 1)
-            color = 'blue';
-        else if(color == 2)
-            color = 'yellow'
-        else
-            color = 'green';
-        return color;
-    }
-
-    fall(){
-        this.body.y += this.gravity;
+    getColor(){
+        let n = floor(random(4));
+        let c;
+        if(n == 0)
+            c = '#9030fa';
+        else if(n == 1)
+            c = '#f5df35';
+        else  if(n == 2)
+            c = '#1ae2f0'
+        else  if(n == 3)
+            c = '#ff1e79';
+        return c;
     }
 
     show(){
@@ -31,9 +28,31 @@ class Sw {
         circle(this.body.x, this.body.y, this.r);
     }
 
-    jump(){
-        this.body.y -= this.jValue;
+    update(){
+        this.v += this.grav;
+        this.v *= 0.9;
+        this.body.y += this.v;
+
+        if(this.body.y > height){
+            this.body.y = height;
+            this.v = 0;
+        }
+        if(this.body.y < 0){
+            this.body.y = 0;
+            this.v = 0;
+        }
     }
 
+    up(){
+        this.v += this.lift;
 
+    }
+
+    
+
+
+    end(){
+        noLoop();
+        //background(255, 0, 0);
+    }
 }
