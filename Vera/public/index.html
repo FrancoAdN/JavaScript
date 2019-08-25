@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vera</title>
+
+</head>
+<body>
+    <button onclick="mostrarDiv('inst-data')">Insertar datos</button><br><br>
+    <button onclick="mostrarDiv('del-data'); viewD();">Eliminar datos</button><br><br>
+    <button onclick="mostrarDiv('act-data'); viewU();">Actualizar datos</button><br><br>
+    <button onclick="mostrarDiv('busc-data');">Buscar datos</button><br>
+    
+    </br></br>
+
+    <div id="inst-data" style="display: none;">
+        <h3>INSERTAR NUEVO REGISTRO</h3>
+        <form action="/insertar" method="post">
+            </br>
+            <label for="marca">Marca: </label><input type="text" name="marca" required>
+            </br>
+            <label for="usb">USB: </label> <input type="text" name="usb"required>
+            <br>
+            <label for="giga">GIGA: </label> <input type="number" name="giga" required>
+            </br>
+            
+            <button type="submit">ENVIAR REGISTRO</button></br>
+        </form>
+    </div>
+    <div id="del-data" style="display: none;">
+        <h3>ELIMINAR</h3>
+        <table id="tbd" style="border:1px solid black;"></table>
+    </div>
+    <div id="act-data" style="display: none;">
+        <h3>ACTUALIZAR</h3>
+        <table id="tbu" style="border:1px solid black;"></table>
+    </div>
+    <div id="busc-data" style="display: none;">
+        <h3>BUSCAR DATOS</h3>
+        Marca: <input id="search1" type="text"><button onclick="marca();">buscar</button></br>
+        Giga: <input id="search2"type="text"><button onclick="giga();">buscar</button></br>
+        
+        <table id="res" style="border:1px solid black;">
+        </table>
+        
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
